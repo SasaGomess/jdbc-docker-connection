@@ -3,10 +3,7 @@ package br.com.sabrinaweb.maventest.repository;
 import br.com.sabrinaweb.maventest.dominio.Producer;
 import lombok.extern.log4j.Log4j2;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -104,5 +101,27 @@ public class ProducerRepository {
             log.error("Error while trying to findAll procucers ", e);
         }
         return producers;
+    }
+    public static void showProducerMetaData() {
+        log.info("Showing Producer Metadata");
+        String sql = "SELECT * FROM `loja`.`producer`";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            ResultSetMetaData rsmetaData = rs.getMetaData();
+            int columnCount = rsmetaData.getColumnCount();
+            log.info("Columns count '{}'", columnCount);
+            log.info("Tables name: '{}'", rsmetaData.getTableName(columnCount));
+
+            for (int i = 1; i <= columnCount; i++) {
+                log.info("Column name: '{}'", rsmetaData.getColumnName(i));
+                log.info("Column size data: '{}'", rsmetaData.getColumnDisplaySize(i));
+                log.info("Column nameType: '{}'", rsmetaData.getColumnTypeName(i));
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to findAll procucers ",e);
+        }
     }
 }
