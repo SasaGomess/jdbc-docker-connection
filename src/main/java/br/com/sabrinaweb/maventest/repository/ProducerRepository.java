@@ -4,8 +4,12 @@ import br.com.sabrinaweb.maventest.dominio.Producer;
 import lombok.extern.log4j.Log4j2;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Log4j2
 public class ProducerRepository {
@@ -52,5 +56,28 @@ public class ProducerRepository {
         } catch (SQLException e) {
             log.error("Error while trying to update '{}' procucer '{}'", producer.getName(), producer.getId());
         }
+    }
+    public static Set<Producer> findAll() {
+        log.info("Finding all producers");
+        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+        String sql = "SELECT id, name FROM `loja`.`producer`";
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()){
+                producers.add(Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build());
+//                rs.getInt(1);
+//                rs.getString(2);
+            }
+
+        } catch (SQLException e) {
+            log.error("Error while trying to findAll procucers ",e);
+        }
+        return producers;
     }
 }
