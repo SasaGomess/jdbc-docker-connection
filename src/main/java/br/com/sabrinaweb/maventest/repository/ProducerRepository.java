@@ -40,4 +40,17 @@ public class ProducerRepository {
             log.error("Error while trying to delete producer '{}'", id);
         }
     }
+
+    public static void update(Producer producer) {
+        String sql = "UPDATE `loja`.`producer` SET `name` = '%s' WHERE (`id` = '%d')".formatted(producer.getName(), producer.getId());
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement()) {
+
+            int rowsAffected = st.executeUpdate(sql);
+            log.info("Updated producer '{}' from the database, rowsaffected '{}'", producer.getId(), rowsAffected);
+
+        } catch (SQLException e) {
+            log.error("Error while trying to update '{}' procucer '{}'", producer.getName(), producer.getId());
+        }
+    }
 }
