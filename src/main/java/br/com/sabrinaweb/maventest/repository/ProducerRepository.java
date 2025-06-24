@@ -29,4 +29,15 @@ public class ProducerRepository {
             log.error("Error while trying to delete producer");
         }
     }
+    public static void delete(int id) {
+        String sql = "DELETE FROM `loja`.`producer` WHERE (`id` = '%d') ".formatted(id);
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement()) {
+
+            int rowsAffected = st.executeUpdate(sql);
+            log.info("Deleted producer '{}' from the database rows affected '{}'", id, rowsAffected);
+        } catch (SQLException e) {
+            log.error("Error while trying to delete producer '{}'", id);
+        }
+    }
 }
