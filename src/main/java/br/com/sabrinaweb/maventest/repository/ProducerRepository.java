@@ -23,6 +23,7 @@ public class ProducerRepository {
             log.error("Error while trying to insert producer '{}'", producer.getName());
         }
     }
+
     public static void deleteBetween(int idInicio, int idFinal) {
         String sql = "DELETE FROM `loja`.`producer` WHERE `id` BETWEEN '%d' AND '%d'".formatted(idInicio, idFinal);
         try (Connection conn = ConnectionFactory.getConnection();
@@ -33,6 +34,7 @@ public class ProducerRepository {
             log.error("Error while trying to delete producer");
         }
     }
+
     public static void delete(int id) {
         String sql = "DELETE FROM `loja`.`producer` WHERE (`id` = '%d') ".formatted(id);
         try (Connection conn = ConnectionFactory.getConnection();
@@ -57,6 +59,7 @@ public class ProducerRepository {
             log.error("Error while trying to update '{}' procucer '{}'", producer.getName(), producer.getId());
         }
     }
+
     public static Set<Producer> findAll() {
         log.info("Finding all producers");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
@@ -65,7 +68,7 @@ public class ProducerRepository {
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
-            while (rs.next()){
+            while (rs.next()) {
                 producers.add(Producer
                         .builder()
                         .id(rs.getInt("id"))
@@ -76,7 +79,29 @@ public class ProducerRepository {
             }
 
         } catch (SQLException e) {
-            log.error("Error while trying to findAll procucers ",e);
+            log.error("Error while trying to findAll procucers ", e);
+        }
+        return producers;
+    }
+
+    public static Set<Producer> findByName(String name) {
+        log.info("Finding by producer name");
+        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE '%%%s%%'".formatted(name);
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                producers.add(Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build());
+            }
+
+        } catch (SQLException e) {
+            log.error("Error while trying to findAll procucers ", e);
         }
         return producers;
     }
