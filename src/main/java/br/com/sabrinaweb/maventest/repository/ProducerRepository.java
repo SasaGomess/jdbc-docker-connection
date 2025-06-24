@@ -152,4 +152,49 @@ public class ProducerRepository {
             log.error("Error while trying to show driver metadata ",e);
         }
     }
+    public static void showTypeScrollWorking() {
+        String sql = "SELECT * FROM `loja`.`producer`";
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = st.executeQuery(sql)) {
+            int especifRow = 4;
+
+            log.info("Last row? '{}'", rs.last());
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("------------------------------------------");
+            log.info("Row relative? '{}'", rs.relative(-especifRow));
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("------------------------------------------");
+            log.info("First row? '{}'", rs.first());
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("------------------------------------------");
+            log.info("Row absolute? '{}'", rs.absolute(especifRow));
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            log.info("------------------------------------------");
+            log.info("Is last? '{}'", rs.isLast());
+            log.info("Row number? '{}'", rs.getRow());
+            log.info("------------------------------------------");
+            log.info("Is first? '{}'", rs.isFirst());
+            log.info("Row number? '{}'", rs.getRow());
+            log.info("Last row? '{}'", rs.last());
+            log.info("-------------------------------");
+
+
+            rs.next();
+            log.info("Is after last? '{}'", rs.isAfterLast());
+            log.info("Row number -> after last '{}'", rs.getRow());
+            while (rs.previous()) {
+                log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            }
+            log.info("------------------------------------------");
+            log.info("Is before first? '{}'", rs.isBeforeFirst());
+            log.info("Row number? '{}'", rs.getRow());
+        } catch (SQLException e) {
+            log.error("Error while trying to show the rows informations ", e);
+        }
+    }
 }
