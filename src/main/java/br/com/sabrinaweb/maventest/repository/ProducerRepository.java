@@ -76,7 +76,7 @@ public class ProducerRepository {
             }
 
         } catch (SQLException e) {
-            log.error("Error while trying to findAll procucers ", e);
+            log.error("Error while trying to findAll producers ", e);
         }
         return producers;
     }
@@ -98,7 +98,7 @@ public class ProducerRepository {
             }
 
         } catch (SQLException e) {
-            log.error("Error while trying to findAll procucers ", e);
+            log.error("Error while trying to find producers by name ", e);
         }
         return producers;
     }
@@ -121,7 +121,35 @@ public class ProducerRepository {
                 log.info("Column nameType: '{}'", rsmetaData.getColumnTypeName(i));
             }
         } catch (SQLException e) {
-            log.error("Error while trying to findAll procucers ",e);
+            log.error("Error while trying to show producer's metadata ",e);
+        }
+    }
+    public static void showDriverMetaData() {
+        log.info("Showing Driver Metadata");
+
+        try (Connection conn = ConnectionFactory.getConnection()){
+            DatabaseMetaData dbmetaData = conn.getMetaData();
+            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)){
+                log.info("Supports TYPE_FORWARD_ONLY");
+                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                    log.info("And supports CONCUR_UPDATABLE");
+                }
+            }
+            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)){
+                log.info("Supports TYPE_SCROLL_INSENSITIVE");
+                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                    log.info("And supports CONCUR_UPDATABLE");
+                }
+            }
+            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)){
+                log.info("Supports TYPE_SCROLL_SENSITIVE");
+                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                    log.info("And supports CONCUR_UPDATABLE");
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("Error while trying to show driver metadata ",e);
         }
     }
 }
