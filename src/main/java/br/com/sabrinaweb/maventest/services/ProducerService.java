@@ -24,4 +24,9 @@ public class ProducerService {
     public static Set<Producer> findByName(String name){
         return ProducerRepository.findByName(name);
     }
+    private static void requireValidId(Integer id){
+        if (id == null || id <= 0 ){
+            throw new IllegalArgumentException("Error the id which has been passed is invalid. Try again!");
+        }
+    }
 }
