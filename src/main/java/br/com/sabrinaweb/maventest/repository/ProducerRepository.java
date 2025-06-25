@@ -102,6 +102,28 @@ public class ProducerRepository {
         }
         return producers;
     }
+    public static Set<Producer> findByNameAndUpdateToUpperCase(String name) {
+        log.info("Finding by producer name and updating");
+        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE '%%%s%%'".formatted(name);
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()){
+                rs.updateString("name", rs.getString("name").toUpperCase());
+                rs.updateRow();
+                producers.add(Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build());
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to findAll procucers ",e);
+        }
+        return producers;
+    }
     public static void showProducerMetaData() {
         log.info("Showing Producer Metadata");
         String sql = "SELECT * FROM `loja`.`producer`";

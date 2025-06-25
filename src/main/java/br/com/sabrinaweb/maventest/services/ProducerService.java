@@ -33,4 +33,7 @@ public class ProducerService {
             throw new IllegalArgumentException("Error the id which has been passed is invalid. Try again!");
         }
     }
+    public static Set<Producer> findByNameToUpperCase(String name){
+        return ProducerRepository.findByNameAndUpdateToUpperCase(name);
+    }
 }
