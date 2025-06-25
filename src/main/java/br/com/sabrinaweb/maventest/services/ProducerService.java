@@ -10,15 +10,19 @@ public class ProducerService {
         ProducerRepository.save(producer);
     }
     public static void deleteBetween(Integer firstId, Integer lastId){
+        requireValidId(firstId);
+        requireValidId(lastId);
         ProducerRepository.deleteBetween(firstId, lastId);
     }
     public static void delete(Integer id){
+        requireValidId(id);
         ProducerRepository.delete(id);
     }
     public static void update(Producer producer){
         ProducerRepository.update(producer);
     }
     public Set<Producer> findAll(){
+
         return ProducerRepository.findAll();
     }
     public static Set<Producer> findByName(String name){
