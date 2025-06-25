@@ -59,26 +59,7 @@ public class ProducerRepository {
 
     public static Set<Producer> findAll() {
         log.info("Finding all producers");
-        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
-        String sql = "SELECT id, name FROM `loja`.`producer`";
-        try (Connection conn = ConnectionFactory.getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                producers.add(Producer
-                        .builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .build());
-//                rs.getInt(1);
-//                rs.getString(2);
-            }
-
-        } catch (SQLException e) {
-            log.error("Error while trying to findAll producers ", e);
-        }
-        return producers;
+        return findByName("");
     }
 
     public static Set<Producer> findByName(String name) {
