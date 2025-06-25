@@ -21,8 +21,8 @@ public class ProducerRepository {
         }
     }
 
-    public static void deleteBetween(int idInicio, int idFinal) {
-        String sql = "DELETE FROM `loja`.`producer` WHERE `id` BETWEEN '%d' AND '%d'".formatted(idInicio, idFinal);
+    public static void deleteBetween(int firstId, int lastId) {
+        String sql = "DELETE FROM `loja`.`producer` WHERE `id` BETWEEN '%d' AND '%d'".formatted(firstId, lastId);
         try (Connection conn = ConnectionFactory.getConnection();
              Statement st = conn.createStatement()) {
             int rowsAffected = st.executeUpdate(sql);
