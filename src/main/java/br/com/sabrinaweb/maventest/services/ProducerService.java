@@ -21,7 +21,7 @@ public class ProducerService {
     public static void update(Producer producer){
         ProducerRepository.update(producer);
     }
-    public Set<Producer> findAll(){
+    public static Set<Producer> findAll(){
 
         return ProducerRepository.findAll();
     }
@@ -32,6 +32,15 @@ public class ProducerService {
         if (id == null || id <= 0 ){
             throw new IllegalArgumentException("Error the id which has been passed is invalid. Try again!");
         }
+    }
+    public static void showProducerMetaData(){
+        ProducerRepository.showProducerMetaData();
+    }
+    public static void showDriverMetaData(){
+        ProducerRepository.showDriverMetaData();
+    }
+    public static void showTypeScrollWorking(){
+        ProducerRepository.showTypeScrollWorking();
     }
     public static Set<Producer> findByNameToUpperCase(String name){
         return ProducerRepository.findByNameAndUpdateToUpperCase(name);
