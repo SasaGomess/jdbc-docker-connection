@@ -86,9 +86,9 @@ public class ProducerRepository {
     public static Set<Producer> findByNamePreparedStatment(String name) {
         log.info("Finding by producer name with preparedStatment");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
-        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE ?;";
+
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement ps = createPrepareStatment(conn, sql, name);
+             PreparedStatement ps = preparedStatmentFindByName(conn, name);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -103,9 +103,10 @@ public class ProducerRepository {
         }
         return producers;
     }
-    private static PreparedStatement createPrepareStatment(Connection conn, String sql, String name) throws SQLException {
+    private static PreparedStatement preparedStatmentFindByName(Connection conn, String name) throws SQLException {
+        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE ?;";
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, "%" + name);
+        ps.setString(1, String.format("%%%s%%", name));
         return ps;
     }
 
