@@ -1,6 +1,5 @@
-package br.com.sabrinaweb.maventest.repository;
+package br.com.sabrinaweb.maventest.conn;
 
-import javax.sql.RowSet;
 import javax.sql.rowset.JdbcRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.Connection;
