@@ -11,5 +11,8 @@ public class ConnectionFactoryTest02 {
     public static void main(String[] args) {
         Set<Producer> producers = ProducerServiceRowSet.findByNameJdbcRowSet("Studio");
         log.info("Producers found '{}'", producers);
+
+        Producer producer = Producer.builder().id(1).name("Mad House").build();
+        ProducerServiceRowSet.updateJdbcRowSet(producer);
     }
 }
