@@ -2,7 +2,7 @@
 <Configuration status="INFO">
     <Appenders>
         <Console name="LogToConsole" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{1.} - %msg%n"/>>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{1.} - %msg%n"/>
         </Console>
         <File name="LogToFile" fileName="logs/app.log">
             <PatternLayout>
@@ -11,12 +11,10 @@
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="br.com.sabrina" level="info" additivity="false">
-            <AppenderRef ref="LogToFile"/>
+        <Logger name="br.com.sabrinaweb.maventest" level="info" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
         <Root level="error">
-            <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
         </Root>
     </Loggers>
