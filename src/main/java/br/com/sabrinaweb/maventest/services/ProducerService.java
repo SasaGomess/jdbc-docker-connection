@@ -50,4 +50,7 @@ public class ProducerService {
     public static Set<Producer> findByNameAndInsertWhenNotFound(String name){
         return ProducerRepository.findByNameAndInsertWhenNotFound(name);
     }
+    public static void findByNameAndDelete(String name){
+        ProducerRepository.findByNameAndDelete(name);
+    }
 }

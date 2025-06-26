@@ -127,7 +127,20 @@ public class ProducerRepository {
         return producers;
     }
 
-
+    public static void findByNameAndDelete(String name) {
+        log.info("Finding by producer name to delete");
+        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE '%%%s%%'".formatted(name);
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                log.info("Deleting the producer '{}' from database ", rs.getString("name"));
+                rs.deleteRow();
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to delete the producer by name ", e);
+        }
+    }
 
     private static void insertNewProducer(String name, ResultSet rs) throws SQLException {
         rs.moveToInsertRow();
@@ -232,6 +245,7 @@ public class ProducerRepository {
             log.error("Error while trying to show the rows informations ", e);
         }
     }
+
     private static Producer getProducer(ResultSet rs) throws SQLException {
         rs.beforeFirst();
         rs.next();
