@@ -130,6 +130,7 @@ public class ProducerRepository {
         ps.setInt(2, producer.getId());
         return ps;
     }
+
     public static Set<Producer> findByNameAndUpdateToUpperCase(String name) {
         log.info("Finding by producer name and updating");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
@@ -298,7 +299,7 @@ public class ProducerRepository {
         return Producer
                 .builder()
                 .id(rs.getInt("id"))
-                .name("name")
+                .name(rs.getString("name"))
                 .build();
     }
 }
