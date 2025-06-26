@@ -146,7 +146,6 @@ public class ProducerRepository {
         } catch (SQLException e) {
             log.error("Error while trying to update '{}' producer's name '{}'", producer.getName(), producer.getId());
         }
-
     }
 
     private static PreparedStatement preparedStatementUpdate(Connection conn, Producer producer) throws SQLException {
