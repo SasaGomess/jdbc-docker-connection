@@ -116,23 +116,23 @@ public class ProducerRepository {
              ResultSet rs = st.executeQuery(sql)) {
 
             if (rs.next()) return producers;
-                //movendo o cursor para a linha temporária
-                rs.moveToInsertRow();
-                rs.updateString("name", name);
-                rs.insertRow();
-                rs.beforeFirst();
 
-            while (rs.next()) {
-                producers.add(Producer
-                        .builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .build());
-            }
+            insertNewProducer(name, rs);
+
+            producers.add(getProducer(rs));
+
         } catch (SQLException e) {
             log.error("Error while trying to insert the producer by that name ", e);
         }
         return producers;
+    }
+
+
+
+    private static void insertNewProducer(String name, ResultSet rs) throws SQLException {
+        rs.moveToInsertRow();
+        rs.updateString("name", name);
+        rs.insertRow();
     }
 
     public static void showProducerMetaData() {
@@ -231,5 +231,14 @@ public class ProducerRepository {
         } catch (SQLException e) {
             log.error("Error while trying to show the rows informations ", e);
         }
+    }
+    private static Producer getProducer(ResultSet rs) throws SQLException {
+        rs.beforeFirst();
+        rs.next();
+        return Producer
+                .builder()
+                .id(rs.getInt("id"))
+                .name("name")
+                .build();
     }
 }
