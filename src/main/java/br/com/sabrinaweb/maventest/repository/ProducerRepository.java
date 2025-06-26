@@ -83,6 +83,7 @@ public class ProducerRepository {
         }
         return producers;
     }
+
     public static Set<Producer> findByNameAndUpdateToUpperCase(String name) {
         log.info("Finding by producer name and updating");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
@@ -91,7 +92,7 @@ public class ProducerRepository {
              Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
              ResultSet rs = st.executeQuery(sql)) {
 
-            while (rs.next()){
+            while (rs.next()) {
                 rs.updateString("name", rs.getString("name").toUpperCase());
                 rs.updateRow();
                 producers.add(Producer
@@ -101,10 +102,39 @@ public class ProducerRepository {
                         .build());
             }
         } catch (SQLException e) {
-            log.error("Error while trying to findAll procucers ",e);
+            log.error("Error while trying to update producer by name ", e);
         }
         return producers;
     }
+
+    public static Set<Producer> findByNameAndInsertWhenNotFound(String name) {
+        log.info("Finding by producer name if not founding insert new register");
+        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE '%%%s%%'".formatted(name);
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = st.executeQuery(sql)) {
+
+            if (rs.next()) return producers;
+                //movendo o cursor para a linha temporária
+                rs.moveToInsertRow();
+                rs.updateString("name", name);
+                rs.insertRow();
+                rs.beforeFirst();
+
+            while (rs.next()) {
+                producers.add(Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build());
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to insert the producer by that name ", e);
+        }
+        return producers;
+    }
+
     public static void showProducerMetaData() {
         log.info("Showing Producer Metadata");
         String sql = "SELECT * FROM `loja`.`producer`";
@@ -124,37 +154,39 @@ public class ProducerRepository {
                 log.info("Column nameType: '{}'", rsmetaData.getColumnTypeName(i));
             }
         } catch (SQLException e) {
-            log.error("Error while trying to show producer's metadata ",e);
+            log.error("Error while trying to show producer's metadata ", e);
         }
     }
+
     public static void showDriverMetaData() {
         log.info("Showing Driver Metadata");
 
-        try (Connection conn = ConnectionFactory.getConnection()){
+        try (Connection conn = ConnectionFactory.getConnection()) {
             DatabaseMetaData dbmetaData = conn.getMetaData();
-            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)){
+            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)) {
                 log.info("Supports TYPE_FORWARD_ONLY");
-                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
                     log.info("And supports CONCUR_UPDATABLE");
                 }
             }
-            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)){
+            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)) {
                 log.info("Supports TYPE_SCROLL_INSENSITIVE");
-                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
                     log.info("And supports CONCUR_UPDATABLE");
                 }
             }
-            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)){
+            if (dbmetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)) {
                 log.info("Supports TYPE_SCROLL_SENSITIVE");
-                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                if (dbmetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
                     log.info("And supports CONCUR_UPDATABLE");
                 }
             }
 
         } catch (SQLException e) {
-            log.error("Error while trying to show driver metadata ",e);
+            log.error("Error while trying to show driver metadata ", e);
         }
     }
+
     public static void showTypeScrollWorking() {
         String sql = "SELECT * FROM `loja`.`producer`";
         try (Connection conn = ConnectionFactory.getConnection();

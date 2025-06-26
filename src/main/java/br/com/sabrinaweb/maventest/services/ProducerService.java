@@ -47,4 +47,7 @@ public class ProducerService {
     public static Set<Producer> findByNameToUpperCase(String name){
         return ProducerRepository.findByNameAndUpdateToUpperCase(name);
     }
+    public static Set<Producer> findByNameAndInsertWhenNotFound(String name){
+        return ProducerRepository.findByNameAndInsertWhenNotFound(name);
+    }
 }
