@@ -48,7 +48,9 @@ public class ConnectionFactoryTest {
 //        log.info("Producers found '{}'",producers3);
 //        ProducerService.findByNameAndDelete("Bones");
 
-        Set<Producer> producers4 = ProducerService.findByNamePreparedStatment("Ghibli");
-        log.info("Producers found '{}'", producers4);
+//        Set<Producer> producers4 = ProducerService.findByNamePreparedStatment("Ghibli");
+//        log.info("Producers found '{}'", producers4);
+        Producer producerToUpdate3 = Producer.builder().id(6).name("Kyoto Animation").build();
+        ProducerService.updatePreparedStatment(producerToUpdate3);
     }
 }

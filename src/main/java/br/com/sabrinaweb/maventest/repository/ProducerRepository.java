@@ -109,7 +109,27 @@ public class ProducerRepository {
         ps.setString(1, String.format("%%%s%%", name));
         return ps;
     }
+    public static void updatePreparedStatment(Producer producer) {
 
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = preparedStatmentUpdate(conn, producer)) {
+
+            ps.executeUpdate();
+            log.info("Updated producer '{}' from the database ", producer.getId());
+
+        } catch (SQLException e) {
+            log.error("Error while trying to update '{}' producer's name '{}'", producer.getName(), producer.getId());
+        }
+
+    }
+
+    private static PreparedStatement preparedStatmentUpdate(Connection conn, Producer producer) throws SQLException {
+        String sql = "UPDATE `loja`.`producer` SET `name` = ? WHERE (`id` = ?)";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1,  producer.getName());
+        ps.setInt(2, producer.getId());
+        return ps;
+    }
     public static Set<Producer> findByNameAndUpdateToUpperCase(String name) {
         log.info("Finding by producer name and updating");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));

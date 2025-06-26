@@ -1,9 +1,13 @@
 package br.com.sabrinaweb.maventest.services;
 
 import br.com.sabrinaweb.maventest.dominio.Producer;
+import br.com.sabrinaweb.maventest.repository.ConnectionFactory;
 import br.com.sabrinaweb.maventest.repository.ProducerRepository;
 import br.com.sabrinaweb.maventest.services.exceptions.InvalidIdException;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Set;
 
 public class ProducerService {
@@ -56,4 +60,8 @@ public class ProducerService {
     public static Set<Producer> findByNamePreparedStatment(String name) {
        return ProducerRepository.findByNamePreparedStatment(name);
     }
+    public static void updatePreparedStatment(Producer producer){
+        ProducerRepository.updatePreparedStatment(producer);
+    }
+
 }
