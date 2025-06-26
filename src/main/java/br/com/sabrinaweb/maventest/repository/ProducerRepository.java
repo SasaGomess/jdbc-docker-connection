@@ -83,6 +83,31 @@ public class ProducerRepository {
         }
         return producers;
     }
+    public static Set<Producer> findByNamePreparedStatment(String name) {
+        log.info("Finding by producer name with preparedStatment");
+        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+        String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE ?;";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = createPrepareStatment(conn, sql, name);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                producers.add(Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build());
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to find producers by name ", e);
+        }
+        return producers;
+    }
+    private static PreparedStatement createPrepareStatment(Connection conn, String sql, String name) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, "%" + name);
+        return ps;
+    }
 
     public static Set<Producer> findByNameAndUpdateToUpperCase(String name) {
         log.info("Finding by producer name and updating");

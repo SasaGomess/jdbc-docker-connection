@@ -53,4 +53,7 @@ public class ProducerService {
     public static void findByNameAndDelete(String name){
         ProducerRepository.findByNameAndDelete(name);
     }
+    public static Set<Producer> findByNamePreparedStatment(String name) {
+       return ProducerRepository.findByNamePreparedStatment(name);
+    }
 }

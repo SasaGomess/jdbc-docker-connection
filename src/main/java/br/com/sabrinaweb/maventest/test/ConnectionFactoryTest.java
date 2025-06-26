@@ -46,9 +46,9 @@ public class ConnectionFactoryTest {
 //
 //        Set<Producer> producers3 = ProducerService.findByNameToUpperCase("");
 //        log.info("Producers found '{}'",producers3);
-        Set<Producer> producers4 = ProducerService.findByNameAndInsertWhenNotFound("Bones");
-        log.info("Producers found '{}'", producers4);
+//        ProducerService.findByNameAndDelete("Bones");
 
-        ProducerService.findByNameAndDelete("Bones");
+        Set<Producer> producers4 = ProducerService.findByNamePreparedStatment("Ghibli");
+        log.info("Producers found '{}'", producers4);
     }
 }
