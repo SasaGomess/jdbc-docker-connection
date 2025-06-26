@@ -57,11 +57,15 @@ public class ProducerService {
     public static void findByNameAndDelete(String name){
         ProducerRepository.findByNameAndDelete(name);
     }
-    public static Set<Producer> findByNamePreparedStatment(String name) {
-       return ProducerRepository.findByNamePreparedStatment(name);
+    public static Set<Producer> findByNamePreparedStatement(String name) {
+       return ProducerRepository.findByNamePreparedStatement(name);
     }
-    public static void updatePreparedStatment(Producer producer){
-        ProducerRepository.updatePreparedStatment(producer);
+    public static void updatePreparedStatement(Producer producer){
+        ProducerRepository.updatePreparedStatement(producer);
+    }
+
+    public static Set<Producer> findByNameCallableStatement(String name){
+        return ProducerRepository.findByNameCallableStatement(name);
     }
 
 }

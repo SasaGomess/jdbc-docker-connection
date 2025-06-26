@@ -83,12 +83,12 @@ public class ProducerRepository {
         }
         return producers;
     }
-    public static Set<Producer> findByNamePreparedStatment(String name) {
-        log.info("Finding by producer name with preparedStatment");
+    public static Set<Producer> findByNameCallableStatement(String name) {
+        log.info("Finding by producer name with callableStatement");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement ps = preparedStatmentFindByName(conn, name);
+             PreparedStatement ps = callableStatementFindByName(conn, name);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -103,16 +103,42 @@ public class ProducerRepository {
         }
         return producers;
     }
-    private static PreparedStatement preparedStatmentFindByName(Connection conn, String name) throws SQLException {
+    private static CallableStatement callableStatementFindByName(Connection conn, String name) throws SQLException {
+        String sql = "call find_produce_byname(?);";
+        CallableStatement cs = conn.prepareCall(sql);
+        cs.setString(1, String.format("%%%s%%", name));
+        return cs;
+    }
+    public static Set<Producer> findByNamePreparedStatement(String name) {
+        log.info("Finding by producer name with preparedStatement");
+        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = preparedStatementFindByName(conn, name);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                producers.add(Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build());
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to find producers by name ", e);
+        }
+        return producers;
+    }
+    private static PreparedStatement preparedStatementFindByName(Connection conn, String name) throws SQLException {
         String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE ?;";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, String.format("%%%s%%", name));
         return ps;
     }
-    public static void updatePreparedStatment(Producer producer) {
+    public static void updatePreparedStatement(Producer producer) {
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement ps = preparedStatmentUpdate(conn, producer)) {
+             PreparedStatement ps = preparedStatementUpdate(conn, producer)) {
 
             ps.executeUpdate();
             log.info("Updated producer '{}' from the database ", producer.getId());
@@ -123,7 +149,7 @@ public class ProducerRepository {
 
     }
 
-    private static PreparedStatement preparedStatmentUpdate(Connection conn, Producer producer) throws SQLException {
+    private static PreparedStatement preparedStatementUpdate(Connection conn, Producer producer) throws SQLException {
         String sql = "UPDATE `loja`.`producer` SET `name` = ? WHERE (`id` = ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1,  producer.getName());

@@ -48,9 +48,13 @@ public class ConnectionFactoryTest {
 //        log.info("Producers found '{}'",producers3);
 //        ProducerService.findByNameAndDelete("Bones");
 
-//        Set<Producer> producers4 = ProducerService.findByNamePreparedStatment("Ghibli");
+//        Set<Producer> producers4 = ProducerService.findByNamePreparedStatement("Ghibli");
 //        log.info("Producers found '{}'", producers4);
-        Producer producerToUpdate3 = Producer.builder().id(6).name("Kyoto Animation").build();
-        ProducerService.updatePreparedStatment(producerToUpdate3);
+//        Producer producerToUpdate3 = Producer.builder().id(6).name("Kyoto Animation").build();
+//        ProducerService.updatePreparedStatement(producerToUpdate3);
+
+        Set<Producer> producersCallable = ProducerService.findByNameCallableStatement("Ghibli");
+        log.info("Producers found '{}'", producersCallable);
+
     }
 }
