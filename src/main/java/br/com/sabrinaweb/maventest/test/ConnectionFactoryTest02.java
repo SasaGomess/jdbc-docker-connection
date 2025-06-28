@@ -9,10 +9,12 @@ import java.util.Set;
 @Log4j2
 public class ConnectionFactoryTest02 {
     public static void main(String[] args) {
-        Set<Producer> producers = ProducerServiceRowSet.findByNameJdbcRowSet("Studio");
-        log.info("Producers found '{}'", producers);
+        Producer producer = Producer.builder().id(1).name("MADHOUSE").build();
+        ProducerServiceRowSet.updateCachedRowSet(producer);
+        log.info("--------------------------------------------");
+//        Set<Producer> producers = ProducerServiceRowSet.findByNameJdbcRowSet("");
+//        log.info("Producers found '{}'", producers);
 
-        Producer producer = Producer.builder().id(1).name("Mad House").build();
-        ProducerServiceRowSet.updateJdbcRowSet(producer);
+
     }
 }

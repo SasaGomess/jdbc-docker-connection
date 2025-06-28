@@ -5,8 +5,9 @@ import br.com.sabrinaweb.maventest.dominio.Producer;
 import br.com.sabrinaweb.maventest.listener.CustomRowSetListener;
 import lombok.extern.log4j.Log4j2;
 
+import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.JdbcRowSet;
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.Set;
@@ -48,6 +49,24 @@ public class ProducerRepositoryRowSet {
             jrs.updateString("name", producer.getName());
             jrs.updateRow();
             log.info("Updated producer '{}' from the database ", producer);
+        }catch (SQLException e){
+            log.error("Error while trying to update producers by name ", e);
+        }
+    }
+    public static void updateCachedRowSet(Producer producer) {
+        String sql = "SELECT * FROM producer WHERE (`id` = ?)";
+        try(CachedRowSet crs = ConnectionFactory.getCachedRowSet();
+            Connection conn = ConnectionFactory.getConnection()) {
+
+            conn.setAutoCommit(false);
+            crs.setCommand(sql);
+            crs.setInt(1,  producer.getId());
+            crs.execute(conn);
+            if (!crs.next()) return;
+
+            crs.updateString("name", producer.getName());
+            crs.updateRow();
+            crs.acceptChanges();
 
         }catch (SQLException e){
             log.error("Error while trying to update producers by name ", e);
