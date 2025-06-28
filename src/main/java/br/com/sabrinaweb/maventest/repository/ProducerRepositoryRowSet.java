@@ -2,6 +2,7 @@ package br.com.sabrinaweb.maventest.repository;
 
 import br.com.sabrinaweb.maventest.conn.ConnectionFactory;
 import br.com.sabrinaweb.maventest.dominio.Producer;
+import br.com.sabrinaweb.maventest.listener.CustomRowSetListener;
 import lombok.extern.log4j.Log4j2;
 
 import javax.sql.rowset.JdbcRowSet;
@@ -19,6 +20,7 @@ public class ProducerRepositoryRowSet {
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
 
         try(JdbcRowSet jrs = ConnectionFactory.getjdbcRowSet()) {
+            jrs.addRowSetListener(new CustomRowSetListener());
             jrs.setCommand(sql);
             jrs.setString(1, String.format("%%%s%%",name));
             jrs.execute();
@@ -37,6 +39,7 @@ public class ProducerRepositoryRowSet {
     public static void updateJdbcRowSet(Producer producer) {
         String sql = "SELECT * FROM `loja`.`producer` WHERE (`id` = ?)";
         try(JdbcRowSet jrs = ConnectionFactory.getjdbcRowSet()) {
+            jrs.addRowSetListener(new CustomRowSetListener());
             jrs.setCommand(sql);
             jrs.setInt(1,  producer.getId());
             jrs.execute();
@@ -44,7 +47,8 @@ public class ProducerRepositoryRowSet {
 
             jrs.updateString("name", producer.getName());
             jrs.updateRow();
-            log.info("Updated producer '{}' from the database ", producer.getId());
+            log.info("Updated producer '{}' from the database ", producer);
+
         }catch (SQLException e){
             log.error("Error while trying to update producers by name ", e);
         }

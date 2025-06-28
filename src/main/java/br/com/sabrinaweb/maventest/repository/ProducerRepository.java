@@ -1,5 +1,6 @@
 package br.com.sabrinaweb.maventest.repository;
 
+import br.com.sabrinaweb.maventest.conn.ConnectionFactory;
 import br.com.sabrinaweb.maventest.dominio.Producer;
 import lombok.extern.log4j.Log4j2;
 
