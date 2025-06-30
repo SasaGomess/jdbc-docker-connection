@@ -1,8 +1,8 @@
-package br.com.sabrinaweb.maventest.repository;
+package br.com.sabrinaweb.maventest.JdbcStudies.repository;
 
-import br.com.sabrinaweb.maventest.conn.ConnectionFactory;
-import br.com.sabrinaweb.maventest.dominio.Producer;
-import br.com.sabrinaweb.maventest.listener.CustomRowSetListener;
+import br.com.sabrinaweb.maventest.JdbcStudies.conn.ConnectionFactory;
+import br.com.sabrinaweb.maventest.JdbcStudies.dominio.Producer;
+import br.com.sabrinaweb.maventest.JdbcStudies.listener.CustomRowSetListener;
 import lombok.extern.log4j.Log4j2;
 
 import javax.sql.rowset.CachedRowSet;

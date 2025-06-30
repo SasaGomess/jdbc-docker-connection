@@ -1,4 +1,4 @@
-package br.com.sabrinaweb.maventest.conn;
+package br.com.sabrinaweb.maventest.JdbcStudies.conn;
 
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.JdbcRowSet;

@@ -1,4 +1,4 @@
-package br.com.sabrinaweb.maventest.dominio;
+package br.com.sabrinaweb.maventest.JdbcStudies.dominio;
 
 import lombok.Builder;
 import lombok.Value;

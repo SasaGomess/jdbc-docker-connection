@@ -1,4 +1,4 @@
-package br.com.sabrinaweb.maventest.listener;
+package br.com.sabrinaweb.maventest.JdbcStudies.listener;
 
 import lombok.extern.log4j.Log4j2;
 

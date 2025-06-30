@@ -1,7 +1,7 @@
-package br.com.sabrinaweb.maventest.services;
+package br.com.sabrinaweb.maventest.JdbcStudies.services;
 
-import br.com.sabrinaweb.maventest.dominio.Producer;
-import br.com.sabrinaweb.maventest.repository.ProducerRepositoryRowSet;
+import br.com.sabrinaweb.maventest.JdbcStudies.dominio.Producer;
+import br.com.sabrinaweb.maventest.JdbcStudies.repository.ProducerRepositoryRowSet;
 
 
 import java.util.Set;

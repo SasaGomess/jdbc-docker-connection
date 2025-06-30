@@ -1,8 +1,8 @@
-package br.com.sabrinaweb.maventest.services;
+package br.com.sabrinaweb.maventest.JdbcStudies.services;
 
-import br.com.sabrinaweb.maventest.dominio.Producer;
-import br.com.sabrinaweb.maventest.repository.ProducerRepository;
-import br.com.sabrinaweb.maventest.services.exceptions.InvalidIdException;
+import br.com.sabrinaweb.maventest.JdbcStudies.dominio.Producer;
+import br.com.sabrinaweb.maventest.JdbcStudies.repository.ProducerRepository;
+import br.com.sabrinaweb.maventest.JdbcStudies.services.exceptions.InvalidIdException;
 
 import java.util.Set;
 
