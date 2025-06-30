@@ -13,6 +13,7 @@ public class ProducerService {
 
     public static void menu(int resp){
         switch (resp){
+            case 0 -> System.out.println("Exiting...");
             case 1 -> findByName();
             case 2 -> deleteById();
             default -> throw new IllegalArgumentException("Not valid option");
@@ -21,17 +22,15 @@ public class ProducerService {
     private static void findByName(){
         System.out.println("Type a name to find the producer or empty to all");
         String name = SCANNER.nextLine();
-        List<Producer> producers = ProducerRepository.findByName(name);
-        for (int i = 0; i < producers.size(); i++) {
-            System.out.printf("[%d] - ID: %d %s%n",i, producers.get(i).getId(), producers.get(i).getName());
-        }
+        ProducerRepository
+                .findByName(name)
+                .forEach(p -> System.out.printf("ID:[%d] - %s%n", p.getId(), p.getName()));
     }
     private static void findAll(){
         String name = "";
-        List<Producer> producers = ProducerRepository.findByName(name);
-        for (int i = 0; i < producers.size(); i++) {
-            System.out.printf("[%d] - ID: %d %s%n",i, producers.get(i).getId(), producers.get(i).getName());
-        }
+        ProducerRepository
+                .findByName(name)
+                .forEach(p -> System.out.printf("ID:[%d] - %s%n", p.getId(), p.getName()));
     }
     private static void deleteById(){
         System.out.println("First choose a producer: ");

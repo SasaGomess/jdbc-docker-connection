@@ -14,13 +14,13 @@ public class Program {
             op = Integer.parseInt(SCANNER.nextLine());
             ProducerService.menu(op);
         } while (op != 0);
-        System.out.println("Exiting...");
     }
 
     private static void producerMenu() {
         System.out.println("Type the number of operation");
         System.out.println("1. Search for producer (findAll or findByName)");
         System.out.println("2. Delete producer");
-        System.out.printf("0. To Exit");
+        System.out.println("0. To Exit");
+        System.out.print("RESP: ");
     }
 }
