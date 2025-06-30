@@ -1,11 +1,11 @@
-package br.com.sabrinaweb.maventest.JdbcStudies.dominio;
+package br.com.sabrinaweb.maventest.projectJdbc.domain;
 
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder
-public final class Producer {
-    private final Integer id;
-    private final String name;
+public class Producer {
+    Integer id;
+    String name;
 }
