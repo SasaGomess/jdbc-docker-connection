@@ -21,6 +21,7 @@ public class Program {
         System.out.println("1. Search for producer (findAll or findByName)");
         System.out.println("2. Delete producer");
         System.out.println("3. Save producer");
+        System.out.println("4. Update producer");
         System.out.println("0. To Exit");
         System.out.print("RESP: ");
     }

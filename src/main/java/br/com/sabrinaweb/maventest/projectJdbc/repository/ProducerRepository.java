@@ -13,19 +13,63 @@ public class ProducerRepository {
         log.info("Saving Producer '{}'", producer.getName());
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement ps = createPreparedStatementUpdate(conn, producer)) {
+             PreparedStatement ps = createPreparedStatementInsert(conn, producer)) {
             ps.execute();
         } catch (SQLException e) {
             log.error("Error while trying to update '{}' producer's name '{}'", producer.getName(), producer.getId());
         }
     }
 
+    public static Optional<Producer> findById(Integer id) {
+        log.info("Finding Producer by id '{}'", id);
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = createPreparedStatementFindById(conn, id);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (!rs.next()) return Optional.empty();
+            return Optional.of(Producer
+                    .builder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getString("name"))
+                    .build());
+
+        } catch (SQLException e) {
+            log.error("Error while trying to find producers by id ", e);
+        }
+        return Optional.empty();
+    }
+
+    private static PreparedStatement createPreparedStatementFindById(Connection conn, Integer id) throws SQLException {
+        String sql = "SELECT * FROM `loja`.`producer` WHERE (`id` = ?);";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, id);
+        return ps;
+    }
+    public static void update(Producer producer) {
+        log.info("Updating producer '{}' ", producer);
+        try (Connection conn = br.com.sabrinaweb.maventest.JdbcStudies.conn.ConnectionFactory.getConnection();
+             PreparedStatement ps = createPreparedStatementUpdate(conn, producer)) {
+            ps.execute();
+        } catch (SQLException e) {
+            log.error("Error while trying to update '{}'", producer.getId(), e);
+        }
+    }
+
     private static PreparedStatement createPreparedStatementUpdate(Connection conn, Producer producer) throws SQLException {
+        String sql = "UPDATE `loja`.`producer` SET `name` = ? WHERE (`id` = ?)";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, producer.getName());
+        ps.setInt(2, producer.getId());
+        return ps;
+    }
+
+    private static PreparedStatement createPreparedStatementInsert(Connection conn, Producer producer) throws SQLException {
         String sql = "INSERT INTO `loja`.`producer` (`name`) VALUES (?);";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, producer.getName());
         return ps;
     }
+
     public static List<Producer> findByName(String name) {
         log.info("Finding Producer by name '{}'", name);
         List<Producer> producers = new ArrayList<>();
@@ -53,8 +97,8 @@ public class ProducerRepository {
         ps.setString(1, String.format("%%%s%%", name));
         return ps;
     }
+
     public static void delete(int id) {
-        String sql = "DELETE FROM `loja`.`producer` WHERE (`id` = '%d') ".formatted(id);
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = createPreparedStatementDelete(conn, id)) {
             ps.execute();
@@ -63,6 +107,7 @@ public class ProducerRepository {
             log.error("Error while trying to delete producer '{}'", id);
         }
     }
+
     private static PreparedStatement createPreparedStatementDelete(Connection conn, Integer id) throws SQLException {
         String sql = "DELETE FROM `loja`.`producer` WHERE (`id` = ?) ";
         PreparedStatement ps = conn.prepareStatement(sql);

@@ -4,7 +4,6 @@ package br.com.sabrinaweb.maventest.projectJdbc.service;
 import br.com.sabrinaweb.maventest.projectJdbc.domain.Producer;
 import br.com.sabrinaweb.maventest.projectJdbc.repository.ProducerRepository;
 
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -17,6 +16,7 @@ public class ProducerService {
             case 1 -> findByName();
             case 2 -> deleteById();
             case 3 -> save();
+            case 4 -> update();
             default -> throw new IllegalArgumentException("Not valid option");
         }
     }
@@ -47,5 +47,25 @@ public class ProducerService {
         String name = SCANNER.nextLine();
         Producer producer = Producer.builder().name(name).build();
         ProducerRepository.save(producer);
+    }
+    private static void update(){
+        try {
+            System.out.println("Type the id of the object you to update");
+            findAll();
+            Producer producerFromDb = ProducerRepository.findById(Integer.parseInt(SCANNER.nextLine())).orElseThrow(IllegalArgumentException::new);
+            System.out.println("Producer found: " + producerFromDb);
+            System.out.println("Type the new name or enter to keep the same");
+            String name = SCANNER.nextLine();
+            name = name.isEmpty() ? producerFromDb.getName() : name;
+
+            Producer producerToUpdate = Producer
+                    .builder()
+                    .id(producerFromDb.getId())
+                    .name(name)
+                    .build();
+            ProducerRepository.update(producerToUpdate);
+        }catch (IllegalArgumentException e){
+            System.out.println("Producer not found");
+        }
     }
 }
