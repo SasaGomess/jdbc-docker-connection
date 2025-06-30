@@ -9,6 +9,23 @@ import java.util.*;
 
 @Log4j2
 public class ProducerRepository {
+    public static void save(Producer producer) {
+        log.info("Saving Producer '{}'", producer.getName());
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement ps = createPreparedStatementUpdate(conn, producer)) {
+            ps.execute();
+        } catch (SQLException e) {
+            log.error("Error while trying to update '{}' producer's name '{}'", producer.getName(), producer.getId());
+        }
+    }
+
+    private static PreparedStatement createPreparedStatementUpdate(Connection conn, Producer producer) throws SQLException {
+        String sql = "INSERT INTO `loja`.`producer` (`name`) VALUES (?);";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, producer.getName());
+        return ps;
+    }
     public static List<Producer> findByName(String name) {
         log.info("Finding Producer by name '{}'", name);
         List<Producer> producers = new ArrayList<>();

@@ -16,6 +16,7 @@ public class ProducerService {
             case 0 -> System.out.println("Exiting...");
             case 1 -> findByName();
             case 2 -> deleteById();
+            case 3 -> save();
             default -> throw new IllegalArgumentException("Not valid option");
         }
     }
@@ -39,6 +40,12 @@ public class ProducerService {
         int id = Integer.parseInt(SCANNER.nextLine());
         System.out.println("Are you sure? [Y/N]");
         String answer = SCANNER.nextLine();
-        if(answer.equalsIgnoreCase("Y")) ProducerRepository.delete(id);
+        if(answer.equalsIgnoreCase("y")) ProducerRepository.delete(id);
+    }
+    private static void save(){
+        System.out.println("Type the name to save the producer");
+        String name = SCANNER.nextLine();
+        Producer producer = Producer.builder().name(name).build();
+        ProducerRepository.save(producer);
     }
 }
