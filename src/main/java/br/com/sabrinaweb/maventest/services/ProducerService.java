@@ -10,7 +10,10 @@ public class ProducerService {
     public static void save(Producer producer){
         ProducerRepository.save(producer);
     }
-    public static void deleteBetween(Integer firstId, Integer lastId){
+    public static void saveTransaction(Set<Producer> producers) {
+        ProducerRepository.saveTransaction(producers);
+    }
+        public static void deleteBetween(Integer firstId, Integer lastId){
         requireValidId(firstId);
         requireValidId(lastId);
         ProducerRepository.deleteBetween(firstId, lastId);

@@ -22,6 +22,37 @@ public class ProducerRepository {
         }
     }
 
+    public static void saveTransaction(Set<Producer> producers) {
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            conn.setAutoCommit(false);
+            preparedStatementSaveTrasaction(conn, producers);
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            log.error("Error while trying to update producers '{}'", producers, e);
+        }
+    }
+
+    private static void preparedStatementSaveTrasaction(Connection conn, Set<Producer> producers) throws SQLException {
+        String sql = "INSERT INTO `loja`.`producer` (`name`) VALUES (?)";
+        boolean shouldRollBack = false;
+        for (Producer producer : producers) {
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                log.info("Saving producer '{}'", producer.getName());
+                ps.setString(1, producer.getName());
+//                if (producer.getName().equalsIgnoreCase("Toei Animation")) throw new SQLException("Couldn't save toei animation");
+                ps.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                shouldRollBack = true;
+            }
+        }
+        if (shouldRollBack){
+            log.warn("--Transaction is going to be rollback!--");
+            conn.rollback();
+        }
+    }
+
     public static void deleteBetween(int firstId, int lastId) {
         String sql = "DELETE FROM `loja`.`producer` WHERE `id` BETWEEN '%d' AND '%d'".formatted(firstId, lastId);
         try (Connection conn = ConnectionFactory.getConnection();
@@ -84,6 +115,7 @@ public class ProducerRepository {
         }
         return producers;
     }
+
     public static Set<Producer> findByNameCallableStatement(String name) {
         log.info("Finding by producer name with callableStatement");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
@@ -104,12 +136,14 @@ public class ProducerRepository {
         }
         return producers;
     }
+
     private static CallableStatement callableStatementFindByName(Connection conn, String name) throws SQLException {
         String sql = "call find_produce_byname(?);";
         CallableStatement cs = conn.prepareCall(sql);
         cs.setString(1, String.format("%%%s%%", name));
         return cs;
     }
+
     public static Set<Producer> findByNamePreparedStatement(String name) {
         log.info("Finding by producer name with preparedStatement");
         Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
@@ -130,12 +164,14 @@ public class ProducerRepository {
         }
         return producers;
     }
+
     private static PreparedStatement preparedStatementFindByName(Connection conn, String name) throws SQLException {
         String sql = "SELECT * FROM `loja`.`producer` WHERE `name` LIKE ?;";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, String.format("%%%s%%", name));
         return ps;
     }
+
     public static void updatePreparedStatement(Producer producer) {
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -152,7 +188,7 @@ public class ProducerRepository {
     private static PreparedStatement preparedStatementUpdate(Connection conn, Producer producer) throws SQLException {
         String sql = "UPDATE `loja`.`producer` SET `name` = ? WHERE (`id` = ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1,  producer.getName());
+        ps.setString(1, producer.getName());
         ps.setInt(2, producer.getId());
         return ps;
     }
