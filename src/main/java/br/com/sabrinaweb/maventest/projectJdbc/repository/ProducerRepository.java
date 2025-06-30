@@ -8,15 +8,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Log4j2
 public class ProducerRepository {
-    public static Set<Producer> findByName(String name) {
+    public static List<Producer> findByName(String name) {
         log.info("Finding Producer by name '{}'", name);
-        Set<Producer> producers = new TreeSet<>(Comparator.comparing(Producer::getId));
+        List<Producer> producers = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement ps = createPreparedStatementFindByName(conn, name);

@@ -14,7 +14,7 @@ public class ProducerService {
     public static void buiildMenu(int resp){
         switch (resp){
             case 1 -> findByName();
-            default -> throw new IllegalArgumentException("Not valid option");
+//            default -> throw new IllegalArgumentException("Not valid option");
         }
     }
     private static void findByName(){
@@ -22,7 +22,7 @@ public class ProducerService {
         String name = sc.nextLine();
         List<Producer> producers = ProducerRepository.findByName(name);
         for (int i = 0; i < producers.size(); i++) {
-            System.out.printf("[%d] - %s%n", i, producers.get(i).getName());
+            System.out.printf("[%d] - %s%n", producers.get(i).getId(), producers.get(i).getName());
         }
     }
 }
