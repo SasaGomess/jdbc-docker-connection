@@ -13,7 +13,7 @@ public class AnimeService {
 
     public static void menu(int resp) {
         switch (resp) {
-            case 9 -> System.out.println("Going back...");
+            case 9 -> System.out.println("Coming back...");
             case 1 -> findByName();
             case 2 -> deleteById();
             case 3 -> save();

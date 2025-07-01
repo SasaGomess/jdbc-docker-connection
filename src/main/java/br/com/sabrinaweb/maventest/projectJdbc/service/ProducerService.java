@@ -12,7 +12,7 @@ public class ProducerService {
 
     public static void menu(int resp){
         switch (resp){
-            case 0 -> System.out.println("Exiting...");
+            case 9 -> System.out.println("Coming back......");
             case 1 -> findByName();
             case 2 -> deleteById();
             case 3 -> save();
