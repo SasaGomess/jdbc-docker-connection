@@ -57,4 +57,22 @@ public class AnimeService {
         Anime anime = Anime.builder().name(name).episodes(episodes).producer(Producer.builder().id(idProducer).build()).build();
         AnimeRepository.save(anime);
     }
+
+    private static void update() {
+        try {
+            System.out.println("Type the id of the object you want to update");
+            findAll();
+            Anime animeFromDb = AnimeRepository.findById(Integer.parseInt(SCANNER.nextLine())).orElseThrow(IllegalArgumentException::new);
+            System.out.println("Anime found: " + animeFromDb);
+            System.out.println("Type the new name or enter to keep the same");
+            String name = SCANNER.nextLine();
+            name = name.isEmpty() ? animeFromDb.getName() : name;
+            System.out.println("Type the new number of episodes");
+            int episodes = Integer.parseInt(SCANNER.nextLine());
+            Anime animeToUpdate = Anime.builder().id(animeFromDb.getId()).name(name).episodes(episodes).producer(animeFromDb.getProducer()).build();
+            AnimeRepository.update(animeToUpdate);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Anime not found");
+        }
+    }
 }
