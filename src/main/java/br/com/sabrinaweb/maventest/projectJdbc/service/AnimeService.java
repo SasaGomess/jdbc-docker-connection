@@ -46,4 +46,15 @@ public class AnimeService {
         String answer = SCANNER.nextLine();
         if (answer.equalsIgnoreCase("y")) AnimeRepository.delete(id);
     }
+
+    private static void save() {
+        System.out.println("Type the name to save the anime");
+        String name = SCANNER.nextLine();
+        System.out.println("Type the number of the episodes");
+        int episodes = Integer.parseInt(SCANNER.nextLine());
+        System.out.println("Type the id of the producer");
+        Integer idProducer = Integer.parseInt(SCANNER.nextLine());
+        Anime anime = Anime.builder().name(name).episodes(episodes).producer(Producer.builder().id(idProducer).build()).build();
+        AnimeRepository.save(anime);
+    }
 }
