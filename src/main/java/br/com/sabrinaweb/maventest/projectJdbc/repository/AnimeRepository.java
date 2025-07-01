@@ -25,6 +25,14 @@ public class AnimeRepository {
             log.error("Error while trying to update '{}' anime's name '{}'", anime.getName(), anime.getId());
         }
     }
+    private static PreparedStatement createPreparedStatementInsert(Connection conn, Anime anime) throws SQLException {
+        String sql = "INSERT INTO `loja`.`anime` (name, episodes, id_producer) VALUES (?, ?, ?);";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, anime.getName());
+        ps.setInt(2, anime.getEpisodes());
+        ps.setInt(3, anime.getProducer().getId());
+        return ps;
+    }
 
     public static Optional<Anime> findById(Integer id) {
         log.info("Finding Anime by id '{}'", id);
@@ -55,8 +63,8 @@ public class AnimeRepository {
 
     private static PreparedStatement createPreparedStatementFindById(Connection conn, Integer id) throws SQLException {
         String sql = """
-                SELECT a.id, a.name, a.episodes, a.id_producer, p.name AS 'producer_name' FROM anime a 
-                INNER JOIN producer p ON p.id_producer = producer.id
+                SELECT a.id, a.name, a.episodes, a.id_producer, p.name AS 'producer_name' FROM anime a
+                INNER JOIN producer p ON a.id_producer = p.id
                 WHERE (a.id = ?);
                 """;;
         PreparedStatement ps = conn.prepareStatement(sql);
@@ -83,14 +91,6 @@ public class AnimeRepository {
         return ps;
     }
 
-    private static PreparedStatement createPreparedStatementInsert(Connection conn, Anime anime) throws SQLException {
-        String sql = "INSERT INTO `loja`.`anime` (name, episodes, id_producer) VALUES (?, ?, ?);";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, anime.getName());
-        ps.setInt(2, anime.getEpisodes());
-        ps.setInt(3, anime.getProducer().getId());
-        return ps;
-    }
 
     public static List<Anime> findByName(String name) {
         log.info("Finding Anime by name '{}'", name);
@@ -123,8 +123,8 @@ public class AnimeRepository {
 
     private static PreparedStatement createPreparedStatementFindByName(Connection conn, String name) throws SQLException {
         String sql = """
-                SELECT a.id, a.name, a.episodes, a.id_producer, p.name AS 'producer_name' FROM anime a 
-                INNER JOIN producer p ON p.id_producer = producer.id
+                SELECT a.id, a.name, a.episodes, a.id_producer, p.name AS 'producer_name' FROM anime a
+                INNER JOIN producer p ON a.id_producer = p.id
                 WHERE a.name LIKE ?;
                 """;
         PreparedStatement ps = conn.prepareStatement(sql);
